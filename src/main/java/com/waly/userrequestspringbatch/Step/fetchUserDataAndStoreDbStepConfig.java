@@ -20,7 +20,7 @@ public class fetchUserDataAndStoreDbStepConfig {
 
     @Value("${chunkSize}")
     private Integer chunkSize;
-    
+
     @Bean
     public Step fetchUserDataAndStoreDbStep(ItemReader<UserDTO> fetchUserDataReader, JobRepository jobRepository){
         return new StepBuilder("fetchUserDataAndStoreDbStep", jobRepository)
