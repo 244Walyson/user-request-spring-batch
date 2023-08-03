@@ -26,7 +26,7 @@ import java.util.List;
 public class FetchUserDataConfig implements ItemReader<UserDTO> {
 
     private Logger logger = LoggerFactory.getLogger(fetchUserDataAndStoreDbStepConfig.class);
-    private String BASE_URL  = "http://localhost:8080";
+    private String BASE_URL  = "http://localhost:8081";
     private RestTemplate restTemplate = new RestTemplate();
     private Integer page = 0;
     private List<UserDTO> users = new ArrayList<>();
