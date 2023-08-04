@@ -9,6 +9,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,18 +20,21 @@ import org.springframework.transaction.TransactionManager;
 public class fetchUserDataAndStoreDbStepConfig {
 
     @Autowired
+    @Qualifier("transactionManagerApp")
     private PlatformTransactionManager transactionManager;
 
     @Value("${chunkSize}")
     private Integer chunkSize;
 
     @Bean
-    public Step fetchUserDataAndStoreDbStep(ItemReader<UserDTO> fetchUserDataReader, JobRepository jobRepository, ItemProcessor<UserDTO, User> selectFieldUserDataProcessor, ItemWriter<? super UserDTO> insertUserDataDbWriter) {
-        return new StepBuilder("fetchUserDataAndStoreDbStep", jobRepository)
-                .<UserDTO, UserDTO>chunk(chunkSize, transactionManager)
+    public Step fetchUserDataAndStoreDBStep(ItemReader<UserDTO> fetchUserDataReader,
+                                            ItemProcessor<UserDTO, User> selectFieldsUserDataProcessor, ItemWriter<User> insertUserDataDBWriter,
+                                            JobRepository jobRepository) {
+        return new StepBuilder("fetchUserDataAndStoreDBStep", jobRepository)
+                .<UserDTO, User>chunk(chunkSize, transactionManager)
                 .reader(fetchUserDataReader)
-                .processor(selectFieldUserDataProcessor)
-                .writer(insertUserDataDbWriter)
+                .processor(selectFieldsUserDataProcessor)
+                .writer(insertUserDataDBWriter)
                 .build();
     }
 
